@@ -24,6 +24,11 @@ const exactIntTag = defineScalarTag(intYaml11Tag.tagName, {
     }
     return value;
   },
+  // Number#toString prints the shortest digits that parse back to the same
+  // number (240857690820182016 prints as 240857690820182000), so print the
+  // exact value the number holds instead.
+  represent: (value: number) =>
+    Number.isSafeInteger(value) ? value.toString(10) : BigInt(value).toString(),
 });
 
 export const ADDON_YAML_SCHEMA = YAML11_SCHEMA.withTags(secretTag, exactIntTag);

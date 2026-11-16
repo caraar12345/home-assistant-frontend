@@ -40,6 +40,17 @@ describe("ADDON_YAML_SCHEMA", () => {
       options
     );
   });
+
+  it("dumps a large number with the exact digits it holds", () => {
+    // 240857690820182016 is a multiple of 32, so the number holds it exactly,
+    // but Number#toString prints it as 240857690820182000.
+    const yaml = dump(
+      { id: 240857690820182016, port: 8080 },
+      { schema: ADDON_YAML_SCHEMA }
+    );
+    expect(yaml).toBe("id: 240857690820182016\nport: 8080\n");
+    expect(parse(yaml)).toEqual({ id: "240857690820182016", port: 8080 });
+  });
 });
 
 describe("hasUnsafeInteger", () => {
