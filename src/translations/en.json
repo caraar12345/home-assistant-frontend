@@ -3466,6 +3466,7 @@
               "edit_in_ui": "Edit in UI",
               "edit_in_yaml": "Edit in YAML",
               "invalid_yaml": "Invalid YAML",
+              "unsafe_integer": "This configuration contains a number too large to show exactly, so it is displayed rounded and saving will store the rounded value. To keep the exact value, re-enter it in YAML mode before saving. If it is an ID, ask the app developer to make the option a string.",
               "show_unused_optional": "Show unused optional configuration options"
             },
             "network": {

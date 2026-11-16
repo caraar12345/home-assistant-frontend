@@ -1,5 +1,4 @@
 import { mdiDotsVertical } from "@mdi/js";
-import { defineScalarTag, YAML11_SCHEMA } from "js-yaml";
 import type { CSSResultGroup, PropertyValues, TemplateResult } from "lit";
 import { css, html, LitElement } from "lit";
 import { customElement, property, query, state } from "lit/decorators";
@@ -36,6 +35,7 @@ import { haStyle } from "../../../../../resources/styles";
 import type { HomeAssistant } from "../../../../../types";
 import { supervisorAppsStyle } from "../../resources/supervisor-apps-style";
 import { suggestSupervisorAppRestart } from "../dialogs/suggestSupervisorAppRestart";
+import { ADDON_YAML_SCHEMA, hasUnsafeInteger } from "./addon-yaml-schema";
 import { KeyboardShortcutMixin } from "../../../../../mixins/keyboard-shortcut-mixin";
 
 const SUPPORTED_UI_TYPES = [
@@ -46,13 +46,6 @@ const SUPPORTED_UI_TYPES = [
   "float",
   "schema",
 ];
-
-const secretTag = defineScalarTag("!secret", {
-  resolve: (data) => `!secret ${data}`,
-  identify: () => false,
-});
-
-const ADDON_YAML_SCHEMA = YAML11_SCHEMA.withTags(secretTag);
 
 const MASKED_FIELDS = ["password", "secret", "token"];
 
@@ -323,6 +316,15 @@ class SupervisorAppConfig extends DirtyStateProviderMixin<
                   @value-changed=${this._configChanged}
                   .yamlSchema=${ADDON_YAML_SCHEMA}
                 ></ha-yaml-editor>`
+          }
+          ${
+            hasUnsafeInteger(this.addon.options)
+              ? html`<ha-alert alert-type="warning">
+                  ${this.hass.localize(
+                    "ui.panel.config.apps.configuration.options.unsafe_integer"
+                  )}
+                </ha-alert>`
+              : ""
           }
           ${
             this._error
