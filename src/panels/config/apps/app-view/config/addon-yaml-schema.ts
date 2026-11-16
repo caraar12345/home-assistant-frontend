@@ -9,7 +9,8 @@ const DECIMAL_INTEGER = /^[-+]?(?:0|[1-9][0-9_]*)$/;
 
 // Integers beyond Number.MAX_SAFE_INTEGER (such as 64-bit Discord or Telegram
 // IDs) are silently rounded when parsed as a JavaScript number. Keep their
-// exact digits as a string instead; Supervisor validates and coerces it.
+// exact digits as a string instead: Supervisor coerces it back to an exact
+// integer for `int` options, and `str` options accept it as is.
 const exactIntTag = defineScalarTag(intYaml11Tag.tagName, {
   ...intYaml11Tag,
   resolve: (source, isExplicit, tagName) => {
